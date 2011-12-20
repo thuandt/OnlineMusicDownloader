@@ -6,6 +6,8 @@
 + Save mp3 link to text file
 + Download with wget or built-in python
 + Auto rename with xml data
++ Auto write tags to mp3 file
++ Auto rename with non unicode file name
 """
 
 import os, sys, re
