@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Filename : NhacSoParser.py
 """ ZingMp3Parser - Parser data from http://mp3.zing.vn
 
 Parser web page to get xml url

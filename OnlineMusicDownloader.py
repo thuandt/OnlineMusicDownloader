@@ -8,9 +8,12 @@
 + Auto rename with xml data
 """
 
-import os, sys, re, optparse
-from urllib import urlretrieve
+import os, sys, re
+import optparse
+import unicodedata
+import eyeD3
 from subprocess import call
+from urllib import urlretrieve
 from NhacSoParser import NhacSoParser
 from ZingMP3Parser import ZingMP3Parser
 from NhacCuaTuiParser import NhacCuaTuiParser
@@ -74,16 +77,26 @@ def processing(service_url, options):
                 else:
                     os.mkdir(default_download_directory)
                     download_directory = default_download_directory
+            if(options.no_unicode is not None):
+                for i in range(len(song_name)):
+                    song_name[i] = strip_accents(song_name[i])
+                    song_artist[i] = strip_accents(song_artist[i])
+
+            write_tag = True
+            if(options.no_write_tag is not None):
+                    write_tag = False
 
             if(options.download_accelerator == 'wget'):
                 downloadFileWithWget(song_name,
                                      song_artist,
                                      song_mp3link,
+                                     write_tag,
                                      download_directory)
             else:
                 downloadFileWithPython(song_name,
                                        song_artist,
                                        song_mp3link,
+                                       write_tag,
                                        download_directory)
 
     if(options.output_file is not None):
@@ -92,29 +105,51 @@ def processing(service_url, options):
 def downloadFileWithPython(song_name,
                            song_artist,
                            song_mp3link,
+                           write_tag,
                            download_directory):
+    if(write_tag == True):
+        tag = eyeD3.Tag()
     for i in range(len(song_name)):
         print "Downloading %s" % (song_name[i])
         mp3_filename = song_name[i].replace('/', '-') + " - " + song_artist[i].replace('/', '-') + ".mp3"
-        urlretrieve(song_mp3link[i],
-                    os.path.join(download_directory, mp3_filename))
+        mp3_filepath = os.path.join(download_directory, mp3_filename)
+        urlretrieve(song_mp3link[i], mp3_filepath)
+
+        if(write_tag):
+            tag.link(mp3_filepath)
+            tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
+            tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
+            tag.update()
+
         print "Done."
 
 def downloadFileWithWget(song_name,
                          song_artist,
                          song_mp3link,
+                         write_tag,
                          download_directory):
     wget = ["wget", "-q", "-nd", "-np", "-c", "-r"]
+    if(write_tag):
+        tag = eyeD3.Tag()
+
     for i in range(len(song_name)):
         mp3_filename = song_name[i].replace('/', '') + " - " + song_artist[i].replace('/', '') + ".mp3"
-        file_location = os.path.join(download_directory, mp3_filename)
-        cmd = []
-        cmd.append(song_mp3link[i])
-        cmd.append('-O')
-        cmd.append(file_location)
+        mp3_filepath = os.path.join(download_directory, mp3_filename)
+        wget_args = []
+        wget_args.append(song_mp3link[i])
+        wget_args.append('-O')
+        wget_args.append(mp3_filepath)
         print "Downloading %s" % (song_name[i])
-        call(wget + cmd)
+        call(wget + wget_args)
+        if(write_tag):
+            tag.link(mp3_filepath)
+            tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
+            tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
+            tag.update()
         print "Done."
+
+def strip_accents(s):
+    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
 
 def main():
     """Build the command line option parser."""
@@ -133,6 +168,14 @@ def main():
                       action="store", dest="download_accelerator" ,
                       type="string", metavar="PROGRAM",
                       help="Download Accelerator: wget or python")
+    
+    parser.add_option("--no-unicode",
+                      action="store_true", dest="no_unicode" ,
+                      help="No use Unicode for file name")
+    
+    parser.add_option("--no-write-tag",
+                      action="store_true", dest="no_write_tag" ,
+                      help="No use Unicode for file name")
     
     parser.add_option("-d", "--download-directory",
                       action="store", dest="download_directory",
