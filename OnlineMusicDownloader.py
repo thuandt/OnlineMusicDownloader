@@ -68,7 +68,7 @@ def processing(service_url, options):
                 if(os.path.exists(download_directory) == False):
                     os.mkdir(download_directory)
             else:
-                default_download_directory = os.getenv('HOME') + '/Downloads'
+                default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
                 if (os.path.exists(default_download_directory)):
                     download_directory = default_download_directory
                 else:
@@ -95,8 +95,9 @@ def downloadFileWithPython(song_name,
                            download_directory):
     for i in range(len(song_name)):
         print "Downloading %s" % (song_name[i])
-        mp3_filename = song_name[i] + " - " + song_artist[i] + ".mp3"
-        urlretrieve(song_mp3link[i], download_directory + "/" + mp3_filename)
+        mp3_filename = song_name[i].replace('/', '-') + " - " + song_artist[i].replace('/', '-') + ".mp3"
+        urlretrieve(song_mp3link[i],
+                    os.path.join(download_directory, mp3_filename))
         print "Done."
 
 def downloadFileWithWget(song_name,
@@ -105,8 +106,8 @@ def downloadFileWithWget(song_name,
                          download_directory):
     wget = ["wget", "-q", "-nd", "-np", "-c", "-r"]
     for i in range(len(song_name)):
-        mp3_filename = song_name[i] + " - " + song_artist[i] + ".mp3"
-        file_location = download_directory + "/" + mp3_filename
+        mp3_filename = song_name[i].replace('/', '') + " - " + song_artist[i].replace('/', '') + ".mp3"
+        file_location = os.path.join(download_directory, mp3_filename)
         cmd = []
         cmd.append(song_mp3link[i])
         cmd.append('-O')
