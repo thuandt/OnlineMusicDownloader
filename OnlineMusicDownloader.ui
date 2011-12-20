@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>763</width>
+    <height>427</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>OnlineMusicDownloader</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>741</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="ServicesURLsLabel">
+           <property name="text">
+            <string>Services URL(s)</string>
+           </property>
+           <property name="buddy">
+            <cstring>ServicesURL</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox">
+           <property name="text">
+            <string>Non-Unicode file name</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="checkBox_2">
+           <property name="text">
+            <string>Write Mp3 Tags</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTextEdit" name="ServicesURL"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="SaveWidget">
+       <item>
+        <widget class="QLabel" name="SavefileLabel">
+         <property name="text">
+          <string>Save file to</string>
+         </property>
+         <property name="buddy">
+          <cstring>DownloadFolderInput</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="DownloadFolderInput"/>
+       </item>
+       <item>
+        <widget class="QPushButton" name="BrowseButton">
+         <property name="text">
+          <string>Browse...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="DownloadWidget">
+       <item>
+        <widget class="QLabel" name="DownloadAcceleratorLabel">
+         <property name="text">
+          <string>Download Accelerator</string>
+         </property>
+         <property name="buddy">
+          <cstring>PythonUrllibRadioButton</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="PythonUrllibRadioButton">
+         <property name="text">
+          <string>Python urlibretrieve</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QRadioButton" name="WgetRadioButton">
+         <property name="text">
+          <string>GNU wget</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>Import from file</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="DownloadButton">
+         <property name="text">
+          <string>Download</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="SaveLinksButton">
+         <property name="text">
+          <string>Save links to text file</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="LastGroup">
+       <item>
+        <layout class="QHBoxLayout" name="WorkingStatusGroup">
+         <item>
+          <widget class="QLabel" name="WorkingStatusLabel">
+           <property name="text">
+            <string>Working Status :</string>
+           </property>
+           <property name="buddy">
+            <cstring>WorkingStatus</cstring>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="WorkingStatus">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="StopClose">
+         <item>
+          <widget class="QPushButton" name="StopDownloadButton">
+           <property name="text">
+            <string>Stop Download</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="CloseButton">
+           <property name="text">
+            <string>Close</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>763</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+ </widget>
+ <tabstops>
+  <tabstop>ServicesURL</tabstop>
+  <tabstop>DownloadFolderInput</tabstop>
+  <tabstop>BrowseButton</tabstop>
+  <tabstop>PythonUrllibRadioButton</tabstop>
+  <tabstop>WgetRadioButton</tabstop>
+  <tabstop>DownloadButton</tabstop>
+  <tabstop>SaveLinksButton</tabstop>
+  <tabstop>WorkingStatus</tabstop>
+  <tabstop>StopDownloadButton</tabstop>
+  <tabstop>CloseButton</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>CloseButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>718</x>
+     <y>393</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>389</x>
+     <y>224</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
