@@ -1,0 +1,78 @@
+                      Online Music Downloader
+Tiếng Việt
+==========
+
+Đây là gì ?
+-----------
+
+Online Music Downloader là chương trình dùng để download nhạc từ một số trang
+web nghe nhạc online của Việt Nam.
+
+Chương trình được viết bằng python, chạy đa nền trên bất cứ máy tính nào cài đặt
+Python.
+
+Cài đặt
+-------
+
+Tải chương trình tại đây:
+https://github.com/mrtuxhdb/OnlineMusicDownloader/tarball/master
+
+Giải nén và chạy trên terminal:
+
+    $: tar -xvf ~/Downloads/mrtuxhdb-OnlineMusicDownloader-*.tar.gz
+    $: cd mrtuxhdb-OnlineMusicDownloader*
+    $: chmod +x OnlineMusicDownloader.py
+    $: ./OnlineMusicDownloader.py --help
+    
+Chương trình có thể nhập danh sách các trang muốn tải về từ file hoặc trực tiếp
+khi chạy trương trình.
+Ví dụ:
+    $: ./OnlineMusicDownloader.py -i ~/url.txt http://nhacso.net/nghe-nhac/hotel-california.W19VU0Jf.html
+    
+Thao khảo các tham số khác bằng tham số --help    
+
+Giấy phép
+---------
+
+GPLv3
+http://www.gnu.org/copyleft/gpl.html
+
+Liên hệ
+--------
+
+Thuan.D.T (MrTux) <mrtux@ubuntu-vn.org>
+
+
+English
+=======
+
+What is it?
+-----------
+
+Online Music Download is tools for download music from some vietnamese site
+(nhacso.net, mp3.zing.vn, nhaccuatui.com)
+
+Installation
+------------
+
+Download tarball from here:
+https://github.com/mrtuxhdb/OnlineMusicDownloader/tarball/master
+
+Untar it and run it from Terminal
+
+    $: tar -xvf ~/Downloads/mrtuxhdb-OnlineMusicDownloader-*.tar.gz
+    $: cd mrtuxhdb-OnlineMusicDownloader*
+    $: chmod +x OnlineMusicDownloader.py
+    $: ./OnlineMusicDownloader.py --help
+
+Licensing
+---------
+
+GPLv3
+http://www.gnu.org/copyleft/gpl.html
+
+Contacts
+--------
+
+Thuan.D.T (MrTux) <mrtux@ubuntu-vn.org>
+
