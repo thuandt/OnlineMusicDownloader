@@ -107,12 +107,12 @@ def downloadFileWithWget(song_name,
     for i in range(len(song_name)):
         mp3_filename = song_name[i] + " - " + song_artist[i] + ".mp3"
         file_location = download_directory + "/" + mp3_filename
-        cmd = wget
+        cmd = []
         cmd.append(song_mp3link[i])
         cmd.append('-O')
         cmd.append(file_location)
         print "Downloading %s" % (song_name[i])
-        call(cmd)
+        call(wget + cmd)
         print "Done."
 
 def main():
