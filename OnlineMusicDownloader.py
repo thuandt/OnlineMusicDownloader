@@ -117,7 +117,7 @@ def downloadFileWithPython(song_name,
         mp3_filepath = os.path.join(download_directory, mp3_filename)
         urlretrieve(song_mp3link[i], mp3_filepath)
 
-        if(write_tag) and (song_mp3link.split('.')[-1] == 'mp3'):
+        if(write_tag) and (song_mp3link[i].split('.')[-1] == 'mp3'):
             tag.link(mp3_filepath)
             tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
             tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
@@ -144,7 +144,7 @@ def downloadFileWithWget(song_name,
         wget_args.append(mp3_filepath)
         print "Downloading %s" % (song_name[i])
         call(wget + wget_args)
-        if(write_tag) and (song_mp3link.split('.')[-1] == 'mp3'):
+        if(write_tag) and (song_mp3link[i].split('.')[-1] == 'mp3'):
             tag.link(mp3_filepath)
             tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
             tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
