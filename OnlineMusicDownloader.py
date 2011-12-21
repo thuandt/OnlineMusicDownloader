@@ -61,7 +61,7 @@ def processing(service_url, options):
             song_name, song_artist, song_mp3link = ZingMP3Parser(url).music_data() 
         elif(nhaccuatui_url.match(url)):
             song_name, song_artist, song_mp3link = NhacCuaTuiParser(url).music_data()
-            
+
         """Write mp3 link to output file"""
         if(options.output_file is not None):
             for mp3link in song_mp3link:
@@ -113,7 +113,7 @@ def downloadFileWithPython(song_name,
         tag = eyeD3.Tag()
     for i in range(len(song_name)):
         print "Downloading %s" % (song_name[i])
-        mp3_filename = song_name[i].replace('/', '-') + " - " + song_artist[i].replace('/', '-') + song_mp3link.split('.')[-1]
+        mp3_filename = song_name[i].replace('/', '-') + " - " + song_artist[i].replace('/', '-') + '.' + song_mp3link.split('.')[-1]
         mp3_filepath = os.path.join(download_directory, mp3_filename)
         urlretrieve(song_mp3link[i], mp3_filepath)
 
@@ -135,7 +135,7 @@ def downloadFileWithWget(song_name,
         tag = eyeD3.Tag()
 
     for i in range(len(song_name)):
-        mp3_filename = song_name[i].replace('/', '') + " - " + song_artist[i].replace('/', '') + song_mp3link.split('.')[-1] 
+        mp3_filename = song_name[i].replace('/', '') + " - " + song_artist[i].replace('/', '') + '.' + song_mp3link.split('.')[-1]
         mp3_filepath = os.path.join(download_directory, mp3_filename)
         wget_args = []
         wget_args.append(song_mp3link[i])
@@ -160,7 +160,7 @@ def main():
                       action="store", dest="input_file",
                       type="string", metavar="INPUT-FILE",
                       help="Input file of music links")
-    
+
     parser.add_option("-o", "--output-file",
                       action="store", dest="output_file",
                       type="string", metavar="OUTPUT-FILE",
@@ -170,20 +170,20 @@ def main():
                       action="store", dest="download_accelerator" ,
                       type="string", metavar="PROGRAM",
                       help="Download Accelerator: wget or python")
-    
+
     parser.add_option("--no-unicode",
                       action="store_true", dest="no_unicode" ,
                       help="No use Unicode for file name")
-    
+
     parser.add_option("--no-write-tag",
                       action="store_true", dest="no_write_tag" ,
                       help="No use Unicode for file name")
-    
+
     parser.add_option("-d", "--download-directory",
                       action="store", dest="download_directory",
                       type="string", metavar="DIRECTORY",
                       help="Save download file to DIRECTORY")
-    
+
     """Parser the command line options."""
     service_url = []
     options, args = parser.parse_args(sys.argv)
