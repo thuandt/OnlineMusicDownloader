@@ -17,6 +17,8 @@ Cài đặt
 Tải chương trình tại đây:
 https://github.com/mrtuxhdb/OnlineMusicDownloader/tarball/master
 
+Để có thể ghi tag name vào file mp3 bạn cần cài đặt thêm thư viện python-eye3d
+
 Giải nén và chạy trên terminal:
 
     $: tar -xvf ~/Downloads/mrtuxhdb-OnlineMusicDownloader-*.tar.gz
@@ -57,6 +59,8 @@ Installation
 
 Download tarball from here:
 https://github.com/mrtuxhdb/OnlineMusicDownloader/tarball/master
+
+You should install python-eyed3 for tag writing
 
 Untar it and run it from Terminal
 
