@@ -113,7 +113,7 @@ def downloadFileWithPython(song_name,
         tag = eyeD3.Tag()
     for i in range(len(song_name)):
         print "Downloading %s" % (song_name[i])
-        mp3_filename = song_name[i].replace('/', '-') + " - " + song_artist[i].replace('/', '-') + ".mp3"
+        mp3_filename = song_name[i].replace('/', '-') + " - " + song_artist[i].replace('/', '-') + song_mp3link.split('.')[-1]
         mp3_filepath = os.path.join(download_directory, mp3_filename)
         urlretrieve(song_mp3link[i], mp3_filepath)
 
@@ -135,7 +135,7 @@ def downloadFileWithWget(song_name,
         tag = eyeD3.Tag()
 
     for i in range(len(song_name)):
-        mp3_filename = song_name[i].replace('/', '') + " - " + song_artist[i].replace('/', '') + ".mp3"
+        mp3_filename = song_name[i].replace('/', '') + " - " + song_artist[i].replace('/', '') + song_mp3link.split('.')[-1] 
         mp3_filepath = os.path.join(download_directory, mp3_filename)
         wget_args = []
         wget_args.append(song_mp3link[i])
@@ -151,7 +151,7 @@ def downloadFileWithWget(song_name,
         print "Done."
 
 def strip_accents(s):
-    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+    return ''.join((c for c in unicodedata.normalize('NFKD', s) if unicodedata.category(c) != 'Mn'))
 
 def main():
     """Build the command line option parser."""
