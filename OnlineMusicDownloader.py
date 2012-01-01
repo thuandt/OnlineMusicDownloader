@@ -14,7 +14,7 @@ import os, sys, re
 import optparse
 import unicodedata
 from subprocess import call
-from urllib import urlretrieve
+from urllib import urlretrieve, urlopen
 from NhacSoParser import NhacSoParser
 from ZingMP3Parser import ZingMP3Parser
 from NhacCuaTuiParser import NhacCuaTuiParser
@@ -60,6 +60,10 @@ def processing(service_url, options):
             song_name, song_artist, song_mp3link = ZingMP3Parser(url).music_data() 
         elif(nhaccuatui_url.match(url)):
             song_name, song_artist, song_mp3link = NhacCuaTuiParser(url).music_data()
+
+        """Get real media link."""
+        for i in range(len(song_mp3link)):
+            song_mp3link[i] = urlopen(song_mp3link[i]).geturl()
 
         """Write mp3 link to output file"""
         if(options.output_file is not None):
