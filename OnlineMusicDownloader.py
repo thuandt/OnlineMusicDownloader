@@ -13,6 +13,7 @@
 import os, sys, re
 import optparse
 import unicodedata
+import platform
 from subprocess import call
 from urllib import urlretrieve, urlopen
 from NhacSoParser import NhacSoParser
@@ -76,7 +77,12 @@ def processing(service_url, options):
                 if(os.path.exists(download_directory) == False):
                     os.mkdir(download_directory)
             else:
-                default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
+                if (sys.platform == 'linux2' or sys.platform == 'darwin'):
+                    default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
+                elif (platform.system() == 'Windows' and platform.version() == 'XP'):
+                    default_download_directory = os.path.join(os.getenv('HOME'), 'My Documents', 'Downloads')
+                elif (platform.system() == 'Windows' and (platform.version() == '7' or platform.version() == 'Vista')):
+                    default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
                 if (os.path.exists(default_download_directory)):
                     download_directory = default_download_directory
                 else:
