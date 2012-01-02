@@ -79,9 +79,9 @@ def processing(service_url, options):
             else:
                 if (sys.platform == 'linux2' or sys.platform == 'darwin'):
                     default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
-                elif (platform.system() == 'Windows' and platform.version() == 'XP'):
+                elif (platform.system() == 'Windows' and platform.release() == 'XP'):
                     default_download_directory = os.path.join(os.getenv('HOME'), 'My Documents', 'Downloads')
-                elif (platform.system() == 'Windows' and (platform.version() == '7' or platform.version() == 'Vista')):
+                elif (platform.system() == 'Windows' and (platform.release() == '7' or platform.release() == 'Vista')):
                     default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
                 if (os.path.exists(default_download_directory)):
                     download_directory = default_download_directory
