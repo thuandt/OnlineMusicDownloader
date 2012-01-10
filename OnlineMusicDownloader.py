@@ -75,7 +75,7 @@ def processing(service_url, options):
             if(options.download_directory is not None):
                 download_directory = options.download_directory
                 if(os.path.exists(download_directory) == False):
-                    os.mkdir(download_directory)
+                    os.makedirs(download_directory)
             else:
                 if (sys.platform == 'linux2' or sys.platform == 'darwin'):
                     default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
@@ -86,7 +86,7 @@ def processing(service_url, options):
                 if (os.path.exists(default_download_directory)):
                     download_directory = default_download_directory
                 else:
-                    os.mkdir(default_download_directory)
+                    os.makedirs(default_download_directory)
                     download_directory = default_download_directory
             if(options.no_unicode is not None):
                 for i in range(len(song_name)):
