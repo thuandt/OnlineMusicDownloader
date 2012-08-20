@@ -71,6 +71,8 @@ def processing(service_url, options):
                     f_output.write("%s\n" % mp3link)
         else:
             """Parser options args and set variable."""
+
+            # download_directory
             if(options.download_directory is not None):
                 download_directory = options.download_directory
                 if(os.path.exists(download_directory) == False):
@@ -87,15 +89,19 @@ def processing(service_url, options):
                 else:
                     os.makedirs(default_download_directory)
                     download_directory = default_download_directory
+
+            # no_unicode
             if(options.no_unicode is not None):
                 for i in range(len(song_name)):
                     song_name[i] = strip_accents(song_name[i])
                     song_artist[i] = strip_accents(song_artist[i])
 
+            # write_tag
             write_tag = False
             if(options.write_tag is not None):
                     write_tag = True
 
+            # download_accelerator
             if(options.download_accelerator == 'wget'):
                 downloadFileWithWget(song_name,
                                      song_artist,
@@ -121,21 +127,25 @@ def downloadFileWithPython(song_name,
     if(write_tag):
         import eyeD3
         tag = eyeD3.Tag()
+
     for i in range(len(song_name)):
-        print "Downloading %s" % (song_name[i])
-        mp3_filename = song_name[i].replace('/', '-') + " - " + \
-                       song_artist[i].replace('/', '-') + '.' + \
-                       song_mp3link[i].split('.')[-1]
-        mp3_filepath = os.path.join(download_directory, mp3_filename)
-        urlretrieve(song_mp3link[i], mp3_filepath)
+        """Check None mp3link when download."""
+        if song_mp3link[i] is not None:
+            mp3_filename = song_name[i].replace('/', '-') + " - " + \
+                           song_artist[i].replace('/', '-') + '.' + \
+                           song_mp3link[i].split('.')[-1]
+            mp3_filepath = os.path.join(download_directory, mp3_filename)
 
-        if(write_tag) and (song_mp3link[i].split('.')[-1] == 'mp3'):
-            tag.link(mp3_filepath)
-            tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
-            tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
-            tag.update()
+            print "Downloading %s" % (song_name[i])
+            urlretrieve(song_mp3link[i], mp3_filepath)
 
-        print "Done."
+            if(write_tag) and (song_mp3link[i].split('.')[-1] == 'mp3'):
+                tag.link(mp3_filepath)
+                tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
+                tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
+                tag.update()
+
+            print "Done."
 
 
 def downloadFileWithWget(song_name,
@@ -144,30 +154,38 @@ def downloadFileWithWget(song_name,
                          write_tag,
                          download_directory):
     wget = ["wget", "-q", "-nd", "-np", "-c", "-r"]
+
     if(write_tag):
         import eyeD3
         tag = eyeD3.Tag()
 
     for i in range(len(song_name)):
-        mp3_filename = song_name[i].replace('/', '') + " - " + \
-                       song_artist[i].replace('/', '') + '.' + \
-                       song_mp3link[i].split('.')[-1]
-        mp3_filepath = os.path.join(download_directory, mp3_filename)
-        wget_args = []
-        wget_args.append(song_mp3link[i])
-        wget_args.append('-O')
-        wget_args.append(mp3_filepath)
-        print "Downloading %s" % (song_name[i])
-        call(wget + wget_args)
-        if(write_tag) and (song_mp3link[i].split('.')[-1] == 'mp3'):
-            tag.link(mp3_filepath)
-            tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
-            tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
-            tag.update()
-        print "Done."
+        """Check None mp3link when download."""
+        if song_mp3link[i] is not None:
+            mp3_filename = song_name[i].replace('/', '') + " - " + \
+                           song_artist[i].replace('/', '') + '.' + \
+                           song_mp3link[i].split('.')[-1]
+            mp3_filepath = os.path.join(download_directory, mp3_filename)
+
+            wget_args = []
+            wget_args.append(song_mp3link[i])
+            wget_args.append('-O')
+            wget_args.append(mp3_filepath)
+
+            print "Downloading %s" % (song_name[i])
+            call(wget + wget_args)
+
+            if(write_tag) and (song_mp3link[i].split('.')[-1] == 'mp3'):
+                tag.link(mp3_filepath)
+                tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
+                tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
+                tag.update()
+
+            print "Done."
 
 
 def strip_accents(s):
+    """convert unicode to ascii"""
     return ''.join((c for c in unicodedata.normalize('NFKD', s) if unicodedata.category(c) != 'Mn'))
 
 
