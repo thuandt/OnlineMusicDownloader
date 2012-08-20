@@ -10,12 +10,14 @@
 + Auto rename with non unicode file name
 """
 
-import os, sys, re
+import os
+import sys
+import re
 import optparse
 import unicodedata
 import platform
 from subprocess import call
-from urllib import urlretrieve, urlopen
+from urllib import urlretrieve
 from NhacSoParser import NhacSoParser
 from ZingMP3Parser import ZingMP3Parser
 from NhacCuaTuiParser import NhacCuaTuiParser
@@ -29,6 +31,7 @@ __version__ = "0.0.1"
 __maintainer__ = "Thuan.D.T (MrTux)"
 __email__ = "mrtux@ubuntu-vn.org"
 __status__ = "Development"
+
 
 def processing(service_url, options):
     """Processing input url."""
@@ -45,7 +48,7 @@ def processing(service_url, options):
             f_input.close()
         except IOError:
             print "could not open file"
-    
+
     """Open output file to write mp3 link."""
     if(options.output_file is not None):
         try:
@@ -58,13 +61,9 @@ def processing(service_url, options):
         if(nhacso_url.match(url)):
             song_name, song_artist, song_mp3link = NhacSoParser(url).music_data()
         elif(zing_url.match(url)):
-            song_name, song_artist, song_mp3link = ZingMP3Parser(url).music_data() 
+            song_name, song_artist, song_mp3link = ZingMP3Parser(url).music_data()
         elif(nhaccuatui_url.match(url)):
             song_name, song_artist, song_mp3link = NhacCuaTuiParser(url).music_data()
-
-        """Get real media link."""
-        for i in range(len(song_mp3link)):
-            song_mp3link[i] = urlopen(song_mp3link[i]).geturl()
 
         """Write mp3 link to output file"""
         if(options.output_file is not None):
@@ -113,6 +112,7 @@ def processing(service_url, options):
     if(options.output_file is not None):
         f_output.close()
 
+
 def downloadFileWithPython(song_name,
                            song_artist,
                            song_mp3link,
@@ -123,7 +123,9 @@ def downloadFileWithPython(song_name,
         tag = eyeD3.Tag()
     for i in range(len(song_name)):
         print "Downloading %s" % (song_name[i])
-        mp3_filename = song_name[i].replace('/', '-') + " - " + song_artist[i].replace('/', '-') + '.' + song_mp3link[i].split('.')[-1]
+        mp3_filename = song_name[i].replace('/', '-') + " - " + \
+                       song_artist[i].replace('/', '-') + '.' + \
+                       song_mp3link[i].split('.')[-1]
         mp3_filepath = os.path.join(download_directory, mp3_filename)
         urlretrieve(song_mp3link[i], mp3_filepath)
 
@@ -134,6 +136,7 @@ def downloadFileWithPython(song_name,
             tag.update()
 
         print "Done."
+
 
 def downloadFileWithWget(song_name,
                          song_artist,
@@ -146,7 +149,9 @@ def downloadFileWithWget(song_name,
         tag = eyeD3.Tag()
 
     for i in range(len(song_name)):
-        mp3_filename = song_name[i].replace('/', '') + " - " + song_artist[i].replace('/', '') + '.' + song_mp3link[i].split('.')[-1]
+        mp3_filename = song_name[i].replace('/', '') + " - " + \
+                       song_artist[i].replace('/', '') + '.' + \
+                       song_mp3link[i].split('.')[-1]
         mp3_filepath = os.path.join(download_directory, mp3_filename)
         wget_args = []
         wget_args.append(song_mp3link[i])
@@ -161,8 +166,10 @@ def downloadFileWithWget(song_name,
             tag.update()
         print "Done."
 
+
 def strip_accents(s):
     return ''.join((c for c in unicodedata.normalize('NFKD', s) if unicodedata.category(c) != 'Mn'))
+
 
 def main():
     """Build the command line option parser."""
@@ -178,16 +185,16 @@ def main():
                       help="Save music links to OUTPUT-FILE")
 
     parser.add_option("--download-with",
-                      action="store", dest="download_accelerator" ,
+                      action="store", dest="download_accelerator",
                       type="string", metavar="PROGRAM",
                       help="Download Accelerator: wget or python")
 
     parser.add_option("--no-unicode",
-                      action="store_true", dest="no_unicode" ,
+                      action="store_true", dest="no_unicode",
                       help="No use Unicode for file name")
 
     parser.add_option("--write-tag",
-                      action="store_true", dest="write_tag" ,
+                      action="store_true", dest="write_tag",
                       help="No use Unicode for file name")
 
     parser.add_option("-d", "--download-directory",
