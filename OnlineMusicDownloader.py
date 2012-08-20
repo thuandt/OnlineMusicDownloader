@@ -210,4 +210,7 @@ def main():
     processing(service_url, options)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print "File download has been canceled"
