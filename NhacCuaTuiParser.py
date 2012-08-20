@@ -59,9 +59,9 @@ class NhacCuaTuiParser(HTMLParser):
             xml_data = urlopen(xml_url)  # get xml data
             tree = ET.parse(xml_data)  # parser xml data
             for name in tree.findall('.//track/title'):
-                self.song_name.append(unicode(name.text))  # get song name
+                self.song_name.append(unicode(name.text).strip())  # get song name
             for artist in tree.findall('.//track/creator'):
-                self.song_artist.append(unicode(artist.text))  # get song artist
+                self.song_artist.append(unicode(artist.text).strip())  # get song artist
             for mp3link in tree.findall('.//track/location'):
                 self.song_mp3link.append(unicode(mp3link.text))  # get mp3 link
 
