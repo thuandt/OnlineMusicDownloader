@@ -59,16 +59,19 @@ def processing(service_url, options):
     """Parser and get music data."""
     for url in service_url:
         if(nhacso_url.match(url)):
-            song_name, song_artist, song_link = NhacSoParser(url).music_data()
+            song_name, song_artist, \
+            song_link, song_type = NhacSoParser(url).music_data()
         elif(zing_url.match(url)):
-            song_name, song_artist, song_link = ZingMP3Parser(url).music_data()
+            song_name, song_artist, \
+            song_link, song_type = ZingMP3Parser(url).music_data()
         elif(nhaccuatui_url.match(url)):
-            song_name, song_artist, song_link = NhacCuaTuiParser(url).music_data()
+            song_name, song_artist, \
+            song_link, song_type = NhacCuaTuiParser(url).music_data()
 
         """Write song_link to output file"""
         if(options.output_file is not None):
             for media_url in song_link:
-                    f_output.write("%s\n" % media_url)
+                f_output.write("%s\n" % media_url)
         else:
             """Parser options args and set variable."""
 
@@ -79,11 +82,19 @@ def processing(service_url, options):
                     os.makedirs(download_directory)
             else:
                 if (sys.platform == 'linux2' or sys.platform == 'darwin'):
-                    default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
-                elif (platform.system() == 'Windows' and platform.release() == 'XP'):
-                    default_download_directory = os.path.join(os.getenv('HOME'), 'My Documents', 'Downloads')
-                elif (platform.system() == 'Windows' and (platform.release() == '7' or platform.release() == 'Vista')):
-                    default_download_directory = os.path.join(os.getenv('HOME'), 'Downloads')
+                    default_download_directory = os.path.join(os.getenv('HOME'),
+                                                              'Downloads')
+                elif (platform.system() == 'Windows' and
+                      platform.release() == 'XP'):
+                    default_download_directory = os.path.join(os.getenv('HOME'),
+                                                              'My Documents',
+                                                              'Downloads')
+
+                elif (platform.system() == 'Windows' and
+                     (platform.release() == '7' or
+                      platform.release() == 'Vista')):
+                    default_download_directory = os.path.join(os.getenv('HOME'),
+                                                              'Downloads')
                 if (os.path.exists(default_download_directory)):
                     download_directory = default_download_directory
                 else:
@@ -93,8 +104,8 @@ def processing(service_url, options):
             # no_unicode
             if(options.no_unicode is not None):
                 for i in range(len(song_name)):
-                    song_name[i] = strip_accents(song_name[i])
-                    song_artist[i] = strip_accents(song_artist[i])
+                    song_name[i] = convert_to_ascii(song_name[i])
+                    song_artist[i] = convert_to_ascii(song_artist[i])
 
             # write_tag
             write_tag = False
@@ -103,27 +114,21 @@ def processing(service_url, options):
 
             # download_accelerator
             if(options.download_accelerator == 'wget'):
-                downloadFileWithWget(song_name,
-                                     song_artist,
-                                     song_link,
-                                     write_tag,
-                                     download_directory)
+                downloadFileWithWget(song_name, song_artist,
+                                     song_link, song_type,
+                                     write_tag, download_directory)
             else:
-                downloadFileWithPython(song_name,
-                                       song_artist,
-                                       song_link,
-                                       write_tag,
-                                       download_directory)
+                downloadFileWithPython(song_name, song_artist,
+                                       song_link, song_type,
+                                       write_tag, download_directory)
 
     if(options.output_file is not None):
         f_output.close()
 
 
-def downloadFileWithPython(song_name,
-                           song_artist,
-                           song_link,
-                           write_tag,
-                           download_directory):
+def downloadFileWithPython(song_name, song_artist,
+                           song_link, song_type,
+                           write_tag, download_directory):
     if(write_tag):
         import eyeD3
         tag = eyeD3.Tag()
@@ -132,27 +137,27 @@ def downloadFileWithPython(song_name,
         """Check None song_link when download."""
         if song_link[i] is not None:
             media_filename = song_name[i].replace('/', '-') + " - " + \
-                           song_artist[i].replace('/', '-') + '.' + \
-                           song_link[i].split('.')[-1]
+                             song_artist[i].replace('/', '-') + '.' + \
+                             song_type[i]
             media_filepath = os.path.join(download_directory, media_filename)
 
-            print "Downloading %s" % (song_name[i])
+            print "Downloading %s - %s" % (song_artist[i], song_name[i])
             urlretrieve(song_link[i], media_filepath)
 
-            if(write_tag) and (song_link[i].split('.')[-1] == 'mp3'):
+            if(write_tag) and (song_type[i] == 'mp3'):
                 tag.link(media_filepath)
-                tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
-                tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
+                tag.setTitle(convert_to_ascii(song_name[i]))
+                tag.setArtist(convert_to_ascii(song_artist[i]))
                 tag.update()
 
             print "Done."
+        else:
+            print "Can't find media url for %s - %s " % (song_artist[i], song_name[i])
 
 
-def downloadFileWithWget(song_name,
-                         song_artist,
-                         song_link,
-                         write_tag,
-                         download_directory):
+def downloadFileWithWget(song_name, song_artist,
+                         song_link, song_type,
+                         write_tag, download_directory):
     wget = ["wget", "-q", "-nd", "-np", "-c", "-r"]
 
     if(write_tag):
@@ -163,8 +168,8 @@ def downloadFileWithWget(song_name,
         """Check None song_link when download."""
         if song_link[i] is not None:
             media_filename = song_name[i].replace('/', '') + " - " + \
-                           song_artist[i].replace('/', '') + '.' + \
-                           song_link[i].split('.')[-1]
+                             song_artist[i].replace('/', '') + '.' + \
+                             song_type[i]
             media_filepath = os.path.join(download_directory, media_filename)
 
             wget_args = []
@@ -172,21 +177,37 @@ def downloadFileWithWget(song_name,
             wget_args.append('-O')
             wget_args.append(media_filepath)
 
-            print "Downloading %s" % (song_name[i])
+            print "Downloading %s - %s" % (song_artist[i], song_name[i])
             call(wget + wget_args)
 
-            if(write_tag) and (song_link[i].split('.')[-1] == 'mp3'):
+            if(write_tag) and (song_type[i] == 'mp3'):
                 tag.link(media_filepath)
-                tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
-                tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
+                tag.setTitle(convert_to_ascii(song_name[i]))
+                tag.setArtist(convert_to_ascii(song_artist[i]))
                 tag.update()
 
             print "Done."
+        else:
+            print "Can't find media url for %s - %s " % (song_artist[i], song_name[i])
 
 
-def strip_accents(s):
+def convert_to_ascii(s):
     """convert unicode to ascii"""
-    return ''.join((c for c in unicodedata.normalize('NFKD', s) if unicodedata.category(c) != 'Mn'))
+    # s = re.sub(u'[àáạảãâầấậẩẫăằắặẳẵ]', 'a', s)
+    # s = re.sub(u'[ÀÁẠẢÃĂẰẮẶẲẴÂẦẤẬẨẪ]', 'A', s)
+    # s = re.sub(u'èéẹẻẽêềếệểễ', 'e', s)
+    # s = re.sub(u'ÈÉẸẺẼÊỀẾỆỂỄ', 'E', s)
+    # s = re.sub(u'òóọỏõôồốộổỗơờớợởỡ', 'o', s)
+    # s = re.sub(u'ÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠ', 'O', s)
+    # s = re.sub(u'ìíịỉĩ', 'i', s)
+    # s = re.sub(u'ÌÍỊỈĨ', 'I', s)
+    # s = re.sub(u'ùúụủũưừứựửữ', 'u', s)
+    # s = re.sub(u'ƯỪỨỰỬỮÙÚỤỦŨ', 'U', s)
+    # s = re.sub(u'ỳýỵỷỹ', 'y', s)
+    # s = re.sub(u'ỲÝỴỶỸ', 'Y', s)
+    s = re.sub(u'Đ', 'D', s)
+    s = re.sub(u'đ', 'd', s)
+    return unicodedata.normalize('NFKD', unicode(s)).encode('ASCII', 'ignore')
 
 
 def main():

@@ -31,6 +31,7 @@ class ZingMP3Parser(HTMLParser):
         self.song_name = []
         self.song_artist = []
         self.song_link = []
+        self.song_type = []
         req = urlopen(url)  # open connection to web page
         data = req.read().split("\n")  # split web page with \n
         feed_data = None
@@ -56,12 +57,15 @@ class ZingMP3Parser(HTMLParser):
                     break
             xml_data = urlopen(xml_url)  # get xml data
             tree = ET.parse(xml_data)
-            for name in tree.findall('.//title'):
-                self.song_name.append(unicode(name.text).strip())  # get song name
-            for artist in tree.findall('.//performer'):
-                self.song_artist.append(unicode(artist.text).strip())  # get song artist
-            for media_url in tree.findall('.//source'):
-                self.song_link.append(unicode(media_url.text))  # get mp3 link
+            root = tree.getroot()
+            for name in tree.findall('./item/title'):
+                self.song_name.append(name.text.strip())  # get song name
+            for artist in tree.findall('./item/performer'):
+                self.song_artist.append(artist.text.strip())  # get song artist
+            for media_url in tree.findall('./item/source'):
+                self.song_link.append(media_url.text)  # get media url
+            for child in root:
+                self.song_type.append(child.attrib['type'])  # get media file type
 
     def music_data(self):
         """Returns data of Object
@@ -70,4 +74,4 @@ class ZingMP3Parser(HTMLParser):
         song_artist: list of artist
         song_link: list of mp3 media link
         """
-        return self.song_name, self.song_artist, self.song_link
+        return self.song_name, self.song_artist, self.song_link, self.song_type
