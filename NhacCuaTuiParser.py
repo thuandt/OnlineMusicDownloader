@@ -30,7 +30,7 @@ class NhacCuaTuiParser(HTMLParser):
         HTMLParser.__init__(self)
         self.song_name = []
         self.song_artist = []
-        self.song_mp3link = []
+        self.song_link = []
         req = urlopen(url)  # open connection to web page
         data = req.read().split("\n")  # split web page with \n
         feed_data = None
@@ -63,13 +63,13 @@ class NhacCuaTuiParser(HTMLParser):
             for artist in tree.findall('.//track/creator'):
                 self.song_artist.append(unicode(artist.text).strip())  # get song artist
             for mp3link in tree.findall('.//track/location'):
-                self.song_mp3link.append(unicode(mp3link.text))  # get mp3 link
+                self.song_link.append(unicode(mp3link.text))  # get mp3 link
 
     def music_data(self):
         """Returns data of Object
 
         song_name: list of song name
         song_artist: list of artist
-        song_mp3link: list of mp3 media link
+        song_link: list of mp3 media link
         """
-        return self.song_name, self.song_artist, self.song_mp3link
+        return self.song_name, self.song_artist, self.song_link

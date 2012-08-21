@@ -59,15 +59,15 @@ def processing(service_url, options):
     """Parser and get music data."""
     for url in service_url:
         if(nhacso_url.match(url)):
-            song_name, song_artist, song_mp3link = NhacSoParser(url).music_data()
+            song_name, song_artist, song_link = NhacSoParser(url).music_data()
         elif(zing_url.match(url)):
-            song_name, song_artist, song_mp3link = ZingMP3Parser(url).music_data()
+            song_name, song_artist, song_link = ZingMP3Parser(url).music_data()
         elif(nhaccuatui_url.match(url)):
-            song_name, song_artist, song_mp3link = NhacCuaTuiParser(url).music_data()
+            song_name, song_artist, song_link = NhacCuaTuiParser(url).music_data()
 
         """Write mp3 link to output file"""
         if(options.output_file is not None):
-            for mp3link in song_mp3link:
+            for mp3link in song_link:
                     f_output.write("%s\n" % mp3link)
         else:
             """Parser options args and set variable."""
@@ -105,13 +105,13 @@ def processing(service_url, options):
             if(options.download_accelerator == 'wget'):
                 downloadFileWithWget(song_name,
                                      song_artist,
-                                     song_mp3link,
+                                     song_link,
                                      write_tag,
                                      download_directory)
             else:
                 downloadFileWithPython(song_name,
                                        song_artist,
-                                       song_mp3link,
+                                       song_link,
                                        write_tag,
                                        download_directory)
 
@@ -121,7 +121,7 @@ def processing(service_url, options):
 
 def downloadFileWithPython(song_name,
                            song_artist,
-                           song_mp3link,
+                           song_link,
                            write_tag,
                            download_directory):
     if(write_tag):
@@ -130,16 +130,16 @@ def downloadFileWithPython(song_name,
 
     for i in range(len(song_name)):
         """Check None mp3link when download."""
-        if song_mp3link[i] is not None:
+        if song_link[i] is not None:
             mp3_filename = song_name[i].replace('/', '-') + " - " + \
                            song_artist[i].replace('/', '-') + '.' + \
-                           song_mp3link[i].split('.')[-1]
+                           song_link[i].split('.')[-1]
             mp3_filepath = os.path.join(download_directory, mp3_filename)
 
             print "Downloading %s" % (song_name[i])
-            urlretrieve(song_mp3link[i], mp3_filepath)
+            urlretrieve(song_link[i], mp3_filepath)
 
-            if(write_tag) and (song_mp3link[i].split('.')[-1] == 'mp3'):
+            if(write_tag) and (song_link[i].split('.')[-1] == 'mp3'):
                 tag.link(mp3_filepath)
                 tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
                 tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
@@ -150,7 +150,7 @@ def downloadFileWithPython(song_name,
 
 def downloadFileWithWget(song_name,
                          song_artist,
-                         song_mp3link,
+                         song_link,
                          write_tag,
                          download_directory):
     wget = ["wget", "-q", "-nd", "-np", "-c", "-r"]
@@ -161,21 +161,21 @@ def downloadFileWithWget(song_name,
 
     for i in range(len(song_name)):
         """Check None mp3link when download."""
-        if song_mp3link[i] is not None:
+        if song_link[i] is not None:
             mp3_filename = song_name[i].replace('/', '') + " - " + \
                            song_artist[i].replace('/', '') + '.' + \
-                           song_mp3link[i].split('.')[-1]
+                           song_link[i].split('.')[-1]
             mp3_filepath = os.path.join(download_directory, mp3_filename)
 
             wget_args = []
-            wget_args.append(song_mp3link[i])
+            wget_args.append(song_link[i])
             wget_args.append('-O')
             wget_args.append(mp3_filepath)
 
             print "Downloading %s" % (song_name[i])
             call(wget + wget_args)
 
-            if(write_tag) and (song_mp3link[i].split('.')[-1] == 'mp3'):
+            if(write_tag) and (song_link[i].split('.')[-1] == 'mp3'):
                 tag.link(mp3_filepath)
                 tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
                 tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
