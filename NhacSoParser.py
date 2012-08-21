@@ -31,6 +31,7 @@ class NhacSoParser(HTMLParser):
         self.song_name = []
         self.song_artist = []
         self.song_link = []
+        self.song_type = []
         req = urlopen(url)  # open connection to web page
         data = req.read().split("\n")  # split web page with \n
         feed_data = None
@@ -57,11 +58,15 @@ class NhacSoParser(HTMLParser):
             xml_data = urlopen(xml_url)  # get xml data
             tree = ET.parse(xml_data)
             for name in tree.findall('.//song/name'):
-                self.song_name.append(unicode(name.text).strip())  # get song name
+                self.song_name.append(name.text.strip())  # get song name
             for artist in tree.findall('.//song/artist'):
-                self.song_artist.append(unicode(artist.text).strip())  # get song artist
-            for media_url in tree.findall('.//song/media_url'):
-                self.song_link.append(unicode(media_url.text))  # get mp3 link
+                self.song_artist.append(artist.text.strip())  # get song artist
+            for media_url in tree.findall('.//song/mp3link'):
+                self.song_link.append(media_url.text)  # get media url
+                if media_url.text is not None:
+                    self.song_type.append(media_url.text.split('.')[-1])  # get media type
+                else:
+                    self.song_type.append(None)
 
     def music_data(self):
         """Returns data of Object
@@ -70,5 +75,5 @@ class NhacSoParser(HTMLParser):
         song_artist: list of artist
         song_link: list of mp3 media link
         """
-        return self.song_name, self.song_artist, self.song_link
+        return self.song_name, self.song_artist, self.song_link, self.song_type
 
