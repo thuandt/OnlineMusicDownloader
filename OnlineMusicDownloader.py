@@ -49,7 +49,7 @@ def processing(service_url, options):
         except IOError:
             print "could not open file"
 
-    """Open output file to write mp3 link."""
+    """Open output file to write media link."""
     if(options.output_file is not None):
         try:
             f_output = open(options.output_file, 'w')
@@ -65,10 +65,10 @@ def processing(service_url, options):
         elif(nhaccuatui_url.match(url)):
             song_name, song_artist, song_link = NhacCuaTuiParser(url).music_data()
 
-        """Write mp3 link to output file"""
+        """Write song_link to output file"""
         if(options.output_file is not None):
-            for mp3link in song_link:
-                    f_output.write("%s\n" % mp3link)
+            for media_url in song_link:
+                    f_output.write("%s\n" % media_url)
         else:
             """Parser options args and set variable."""
 
@@ -129,18 +129,18 @@ def downloadFileWithPython(song_name,
         tag = eyeD3.Tag()
 
     for i in range(len(song_name)):
-        """Check None mp3link when download."""
+        """Check None song_link when download."""
         if song_link[i] is not None:
-            mp3_filename = song_name[i].replace('/', '-') + " - " + \
+            media_filename = song_name[i].replace('/', '-') + " - " + \
                            song_artist[i].replace('/', '-') + '.' + \
                            song_link[i].split('.')[-1]
-            mp3_filepath = os.path.join(download_directory, mp3_filename)
+            media_filepath = os.path.join(download_directory, media_filename)
 
             print "Downloading %s" % (song_name[i])
-            urlretrieve(song_link[i], mp3_filepath)
+            urlretrieve(song_link[i], media_filepath)
 
             if(write_tag) and (song_link[i].split('.')[-1] == 'mp3'):
-                tag.link(mp3_filepath)
+                tag.link(media_filepath)
                 tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
                 tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
                 tag.update()
@@ -160,23 +160,23 @@ def downloadFileWithWget(song_name,
         tag = eyeD3.Tag()
 
     for i in range(len(song_name)):
-        """Check None mp3link when download."""
+        """Check None song_link when download."""
         if song_link[i] is not None:
-            mp3_filename = song_name[i].replace('/', '') + " - " + \
+            media_filename = song_name[i].replace('/', '') + " - " + \
                            song_artist[i].replace('/', '') + '.' + \
                            song_link[i].split('.')[-1]
-            mp3_filepath = os.path.join(download_directory, mp3_filename)
+            media_filepath = os.path.join(download_directory, media_filename)
 
             wget_args = []
             wget_args.append(song_link[i])
             wget_args.append('-O')
-            wget_args.append(mp3_filepath)
+            wget_args.append(media_filepath)
 
             print "Downloading %s" % (song_name[i])
             call(wget + wget_args)
 
             if(write_tag) and (song_link[i].split('.')[-1] == 'mp3'):
-                tag.link(mp3_filepath)
+                tag.link(media_filepath)
                 tag.setTitle(song_name[i].encode('latin-1', 'ignore'))
                 tag.setArtist(song_artist[i].encode('latin-1', 'ignore'))
                 tag.update()
