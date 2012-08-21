@@ -60,8 +60,8 @@ class ZingMP3Parser(HTMLParser):
                 self.song_name.append(unicode(name.text).strip())  # get song name
             for artist in tree.findall('.//performer'):
                 self.song_artist.append(unicode(artist.text).strip())  # get song artist
-            for mp3link in tree.findall('.//source'):
-                self.song_link.append(unicode(mp3link.text))  # get mp3 link
+            for media_url in tree.findall('.//source'):
+                self.song_link.append(unicode(media_url.text))  # get mp3 link
 
     def music_data(self):
         """Returns data of Object
