@@ -21,6 +21,7 @@ from urllib import urlretrieve
 from NhacSoParser import NhacSoParser
 from ZingMP3Parser import ZingMP3Parser
 from NhacCuaTuiParser import NhacCuaTuiParser
+from ZingRadioParser import ZingRadioParser
 
 __author__ = "Thuan.D.T (MrTux)"
 __copyright__ = "Copyright (c) 2011 Thuan.D.T (MrTux) "
@@ -37,6 +38,7 @@ def processing(service_url, options):
     """Processing input url."""
     nhacso_url = re.compile('http[s]?://(www.)?(nhacso.net)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
     zing_url = re.compile('http[s]?://(www.)?(mp3.zing.vn)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+    zing_radio_url = re.compile('http[s]?://(www.)?(mp3.zing.vn/radio)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
     nhaccuatui_url = re.compile('http[s]?://(www.)?(nhaccuatui.com)(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
 
     """Open input file to read data."""
@@ -61,6 +63,9 @@ def processing(service_url, options):
         if(nhacso_url.match(url)):
             song_name, song_artist, \
             song_link, song_type = NhacSoParser(url).music_data()
+        elif(zing_radio_url.match(url)):
+            song_name, song_artist, \
+            song_link, song_type = ZingRadioParser(url).music_data()
         elif(zing_url.match(url)):
             song_name, song_artist, \
             song_link, song_type = ZingMP3Parser(url).music_data()
