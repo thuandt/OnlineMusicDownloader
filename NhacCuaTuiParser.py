@@ -36,7 +36,7 @@ class NhacCuaTuiParser(HTMLParser):
         data = req.read().split("\n")  # split web page with \n
         feed_data = None
         for param in data:
-                if (param.find('classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"') > -1):
+            if (param.find('classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"') > -1):
                 """Find line to get xml url
                 """
                 feed_data = param
