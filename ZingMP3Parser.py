@@ -9,6 +9,8 @@ Get xml file and parser to get data
 from urllib import urlopen
 from HTMLParser import HTMLParser
 from xml.etree import ElementTree as ET
+import gzip
+from StringIO import StringIO
 
 __author__ = "Thuan.D.T (MrTux)"
 __copyright__ = "Copyright (c) 2011 Thuan.D.T (MrTux) "
@@ -33,7 +35,13 @@ class ZingMP3Parser(HTMLParser):
         self.song_link = []
         self.song_type = []
         req = urlopen(url)  # open connection to web page
-        data = req.read().split("\n")  # split web page with \n
+        data = None
+        if req.info().get('Content-Encoding') == "gzip":
+            buf = StringIO( req.read())
+            f = gzip.GzipFile(fileobj=buf)
+            data = f.read().split("\n")
+        else:
+            data = req.read().split("\n")  # split web page with \n
         feed_data = None
         for param in data:
             if (param.find('<param name="flashvars" value="') > -1):
@@ -56,6 +64,9 @@ class ZingMP3Parser(HTMLParser):
                     xml_url = xml_file.replace('xmlURL=', '')  # get xml url
                     break
             xml_data = urlopen(xml_url)  # get xml data
+            if xml_data.info().get('Content-Encoding') == "gzip":
+                buf = StringIO( xml_data.read())
+                xml_data = gzip.GzipFile(fileobj=buf)
             tree = ET.parse(xml_data)
             root = tree.getroot()
             for name in tree.findall('./item/title'):
