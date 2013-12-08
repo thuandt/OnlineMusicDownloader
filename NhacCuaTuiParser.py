@@ -36,7 +36,7 @@ class NhacCuaTuiParser(HTMLParser):
         data = req.read().split("\n")  # split web page with \n
         feed_data = None
         for param in data:
-            if (param.find('<param value="flashid=flash-player') > -1):
+            if (param.find('id="mediaFlashPlayer"') > -1):
                 """Find line to get xml url
                 """
                 feed_data = param
