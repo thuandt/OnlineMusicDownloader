@@ -62,9 +62,9 @@ class NhacSoParser(HTMLParser):
             for artist in tree.findall('.//song/artist'):
                 self.song_artist.append(artist.text.strip())  # get song artist
             for media_url in tree.findall('.//song/mp3link'):
-                self.song_link.append(media_url.text)  # get media url
+                self.song_link.append(media_url.text.strip())  # get media url
                 if media_url.text is not None:
-                    self.song_type.append(media_url.text.split('.')[-1])  # get media type
+                    self.song_type.append(media_url.text.strip().split('.')[-1])  # get media type
                 else:
                     self.song_type.append(None)
 
