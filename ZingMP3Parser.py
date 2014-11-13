@@ -76,7 +76,10 @@ class ZingMP3Parser(HTMLParser):
             for media_url in tree.findall('./item/source'):
                 self.song_link.append(media_url.text)  # get media url
             for child in root:
-                self.song_type.append(child.attrib['type'])  # get media file type
+                try:
+                    self.song_type.append(child.attrib['type'])  # get media file type
+                except:
+					pass
 
     def music_data(self):
         """Returns data of Object
